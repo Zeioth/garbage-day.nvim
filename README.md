@@ -6,8 +6,8 @@ LSP garbage collector that free RAM memory by stopping LSP clients while you are
 * It has been tested with neovim 0.9 and 0.10.
 * If a future neovim version changes stuff and the plugin stop working, and for some reason I don't notice, please [open a issue tagging me](https://github.com/Zeioth/garbage-day.nvim/issues) and I will fix it.
 
-## Config
-lazy.nivm
+## How to use
+Add this to lazy
 
 ```lua
 {
