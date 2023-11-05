@@ -16,6 +16,7 @@ Add this to lazy
   opts = {
     grace_period = (60*15), -- after 15 min, stop LSP clients until resuming.
     excluded_languages = { "java" }, -- ignore languages whose clients miss behave.
+    stop_invisible = true, -- LSP will remain active only for visible buffers.
   }
 },
 ```
