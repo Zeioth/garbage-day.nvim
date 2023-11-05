@@ -124,7 +124,7 @@ end
 function M.notify(kind)
 
   if kind == "lsp_has_started" then
-    vim.notify("Re-starting LSP clients on focused recovered.", vim.log.levels.INFO, {
+    vim.notify("Re-starting LSP clients on focus recovered.", vim.log.levels.INFO, {
       title = "garbage-day.nvim"
     })
   elseif kind == "lsp_has_stopped" then
