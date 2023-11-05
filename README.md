@@ -21,7 +21,7 @@ Add this to lazy
 
 ## Available options
 
-| opt | default value | description |
+| Name | Default | Description |
 |--|--|--|
 | `grace_period` | 60*15 | Number of seconds to wait before stopping all LSP clients after neovim loses focus. |
 | `excluded_languages` | { "java", "markdown" } | Languages whose lsp clients should never be stopped. Useful for lsp clients that miss behave. |
