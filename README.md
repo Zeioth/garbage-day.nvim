@@ -14,7 +14,7 @@ Add this to lazy
   "zeioth/garbage-day.nvim",
   event = "BufEnter",
   opts = {
-    grace_period = (60*15), -- after 15 min, stop clients until resuming.
+    grace_period = (60*15), -- after 15 min, stop LSP clients until resuming.
     excluded_languages = { "java" }, -- ignore languages whose clients miss behave.
   }
 },
