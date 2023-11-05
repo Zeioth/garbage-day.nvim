@@ -89,8 +89,11 @@ function M.stop_invisible(excluded_languages)
     for buf, _ in pairs(client.attached_buffers) do
       if not vim.tbl_contains(visible_buffers, buf) then
         local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-        local not_excluded = not vim.tbl_contains(excluded_languages, filetype)
-        if not visible_filetypes[filetype] and not_excluded then
+        local is_lang_excluded = vim.tbl_contains(excluded_languages, filetype)
+        if not visible_filetypes[filetype] and
+           not is_lang_excluded and
+           not client.config.name == "null-ls"
+        then
 
           -- Save the lsp client before stopping it - so we can resume it later.
           stopped_lsp_clients[buf] = stopped_lsp_clients[buf] or {}
@@ -100,16 +103,10 @@ function M.stop_invisible(excluded_languages)
           vim.lsp.stop_client(client.id)
           client.rpc.terminate()
 
-          break -- Stop the client after finding a single invisible buffer
         end
       end
     end
   end
-
-  -- null-ls fix:
-  -- necessary because attached_buffers don't contain visible buffers
-  -- for the lsp server null-ls.
-  pcall(function() require("null-ls").enable({}) end)
 
   return stopped_lsp_clients
 end
@@ -118,21 +115,21 @@ end
 -- MISC UTILS
 -- ----------------------------------------------------------------------------
 
---- Sends a notification
---- @param kind string Accepted values are { "has_started", "has_stopped" }.
-function M.send_notification(kind)
+---Sends a notification.
+---@param kind string Accepted values are:
+---{ "lsp_has_started", "lsp_has_stopped" }
+function M.notify(kind)
 
-  if kind == "has_started" then
-    vim.notify("LSP servers have re-started.", vim.log.levels.INFO, {
-      title = "Garbage-day.nvim"
+  if kind == "lsp_has_started" then
+    vim.notify("Re-starting LSP clients on focused recovered.", vim.log.levels.INFO, {
+      title = "garbage-day.nvim"
     })
-  elseif kind == "has_started" then
-    vim.notify("Inactive LSP servers have been stopped to save resources.", vim.log.levels.INFO, {
-      title = "Garbage-day.nvim"
+  elseif kind == "lsp_has_stopped" then
+    vim.notify("Inactive LSP clients have been stopped to save resources.", vim.log.levels.INFO, {
+      title = "garbage-day.nvim"
     })
   end
 
 end
-
 
 return M
