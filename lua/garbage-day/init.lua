@@ -60,16 +60,18 @@ function M.setup(opts)
 
   -- Focus gained? (buffer)
   -- Experimental, do not use.
-  -- vim.api.nvim_create_autocmd({ "BufEnter" }, {
-  --   callback = function()
-  --
-  --     if config.only_visible_buffers then
-  --       utils.start_lsp(stopped_lsp_clients)
-  --       stopped_lsp_clients = utils.stop_invisible()
-  --     end
-  --
-  --   end
-  -- })
+  vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    callback = function()
+
+      if config.only_visible_buffers then
+        -- TODO: Estamos aplastando el estado en cada BufEnter.
+        -- Quizas no queremos esto.
+        --utils.start_lsp(stopped_lsp_clients)
+        stopped_lsp_clients = utils.stop_invisible(excluded_languages)
+      end
+
+    end
+  })
 end
 
 return M
