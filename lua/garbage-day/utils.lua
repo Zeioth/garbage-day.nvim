@@ -1,5 +1,6 @@
 local M = {}
 
+
 -- CORE UTILS
 -- ----------------------------------------------------------------------------
 
@@ -64,7 +65,9 @@ end
 -----------------------------------------------------------------------------
 
 ---Stop all lsp clients, including the ones in other tabs.
----Except the ones currently asociated to a nvim window in the current tab.
+--Except the ones currently asociated to a nvim window in the current tab.
+--NOTE: null-ls is not compatible with this feature, so its LSP client
+--      won't be stopped.
 ---@param excluded_languages table Languages where we don't want to stop LSP.
 ---@return table stopped_lsp_clients So we can start them again on FocusGaind.
 function M.stop_invisible(excluded_languages)
