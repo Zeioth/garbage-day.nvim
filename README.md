@@ -37,4 +37,4 @@ Add this to lazy
 [It comes from the beloved meme](https://knowyourmeme.com/memes/garbage-day)
 
 ## Other alternatives
-* [lsp-timeout](https://github.com/hinell/lsp-timeout.nvim): Use it for nvim versions `<=0.8`
+* [lsp-timeout](https://github.com/hinell/lsp-timeout.nvim): Recommended for nvim versions `<=0.8`, or if you find any issue using this plugin.
