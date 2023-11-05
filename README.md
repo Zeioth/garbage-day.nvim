@@ -26,7 +26,7 @@ Add this to lazy
 | `grace_period` | `60*15` | Seconds to wait before stopping all LSP clients after neovim loses focus. |
 | `excluded_languages` | `{"java", "markdown"}` | Languages whose LSP clients will never be stopped. Useful for LSP clients that miss behave. |
 | `stop_invisible` | `false` | When `true`, stop all LSP clients except the ones used by the visible buffers. This happen every time you change to a different buffer. This ensures the minimum RAM consumption. |
-| `notifications` | `false` | Enable to know when the clients stop/start while you are testing the plugin. It's recommended to keep this option to `false` afterwards. |
+| `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. It's recommended to keep this option to `false` as it can get quite annoying. |
 
 
 ## FAQ
