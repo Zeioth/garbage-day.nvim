@@ -4,7 +4,7 @@ Garbage collector that stops inactive LSP clients to free RAM.
 ## Why
 In many scenarios, unmanaged LSP clients running on background can take severl Gb of RAM.
 
-I wrote this plugin for [NormalNvim](https://github.com/NormalNvim/NormalNvim), so we can have a LSP garbage collector which code remains readable, maintainable, and stable without needing external dependencies.
+So I wrote this LSP garbage collector for [NormalNvim](https://github.com/NormalNvim/NormalNvim). That way we can ensure the code remains readable, maintainable, and stable without needing external dependencies. As this is quite a core feature.
 
 ## How to setup
 Add this to lazy
