@@ -1,5 +1,5 @@
 # garbage-day.nvim
-LSP garbage collector that free RAM memmory by stopping LSP clients while you are not using them.
+LSP garbage collector that free RAM memory by stopping LSP clients while you are not using them.
 
 ## Requirements
 * This plugin has no external dependencies.
