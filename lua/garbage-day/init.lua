@@ -1,4 +1,19 @@
 --- Plugin to stop LSP clients when inactive.
+
+-- HOW IT WORKS
+-- This plugin has 3 autocmds:
+-- ----------------------------------------------------------------------------
+-- FocusLost:   When the mouse leaves neovim, stop all LSP clients
+--              after a grace period.
+--
+-- FocusGained: When the mouse enters neovim, start all the
+--              previously stopped LSP clients.
+--
+-- BufEnter:    This is a extra, non core feature.
+--              When entering a buffer, stop all LSP clients except the ones
+--              currently asociated to a window in the current tab.
+-- ----------------------------------------------------------------------------
+
 local uv = vim.uv or vim.loop
 local utils = require("garbage-day.utils")
 local config = require("garbage-day.config")
@@ -13,13 +28,15 @@ local lsp_has_been_stopped = false
 local stopped_lsp_clients = {}
 
 local M = {}
+
+
+--- Entry point of the program
 function M.setup(opts)
   config.set(opts)
 
-  -- Focus lost? (nvim)
+  -- Focus lost?
   vim.api.nvim_create_autocmd({ "FocusLost" }, {
     callback = function()
-
       -- Start counting
       timer:start(1000, 1000, vim.schedule_wrap(function()
         -- Update timer state
@@ -37,7 +54,7 @@ function M.setup(opts)
     end
   })
 
-  -- Focus gained? (nvim)
+  -- Focus gained?
   vim.api.nvim_create_autocmd({ "FocusGained" }, {
     callback = function()
 
@@ -57,21 +74,16 @@ function M.setup(opts)
     end
   })
 
-
-  -- Focus gained? (buffer)
-  -- Experimental, do not use.
-  -- vim.api.nvim_create_autocmd({ "BufEnter" }, {
-  --   callback = function()
-  --
-  --     if config.only_visible_buffers then
-  --       -- TODO: Estamos aplastando el estado en cada BufEnter.
-  --       -- Quizas no queremos esto.
-  --       --utils.start_lsp(stopped_lsp_clients)
-  --       stopped_lsp_clients = utils.stop_invisible(excluded_languages)
-  --     end
-  --
-  --   end
-  -- })
+  -- Buffer entered?
+  vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    callback = function()
+      if config.stop_invisible then
+        -- Stop LSP for buffers not attached to a window in the current tab.
+        utils.start_lsp(stopped_lsp_clients)
+        stopped_lsp_clients = utils.stop_invisible(config.excluded_languages)
+      end
+    end
+  })
 end
 
 return M
