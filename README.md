@@ -25,7 +25,7 @@ Add this to lazy
 |--|--|--|
 | `grace_period` | `60*15` | Seconds to wait before stopping all LSP clients after neovim loses focus. |
 | `excluded_languages` | `{"java", "markdown"}` | Languages whose LSP clients will never be stopped. Useful for LSP clients that miss behave. |
-| `stop_invisible` | `false` | Set it to `true` to stop all LSP clients except the ones used by the visible buffers. This happen every time you change to a different buffer. This ensures the minimum RAM consumption. |
+| `stop_invisible` | `false` | Set it to `true` to stop all LSP clients except the ones used by the visible buffers. This happen every time you change to a different buffer. This ensures the minimum RAM consumption. If your CPU is not very powerful, it might take a few seconds to bring back LSP, so disable this option if you need.
 | `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. |
 
 
@@ -44,3 +44,6 @@ If you want to help me, please star this repository to increase the visibility o
 
 ## Other alternatives
 * [lsp-timeout](https://github.com/hinell/lsp-timeout.nvim): Recommended for nvim versions `<=0.8`
+
+## Roadmap
+* Consider exposing vim globals so the options can be setted on the fly.
