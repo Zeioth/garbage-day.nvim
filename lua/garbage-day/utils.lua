@@ -1,6 +1,3 @@
--- TODO:
--- Once nvim 0.10 is released, replace get_active_clients() by get_clients().
-
 local M = {}
 
 
