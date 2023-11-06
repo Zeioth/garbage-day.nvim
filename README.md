@@ -43,3 +43,6 @@ If you want to help me, please star this repository to increase the visibility o
 
 ## Other alternatives
 * [lsp-timeout](https://github.com/hinell/lsp-timeout.nvim): Recommended for nvim versions `<=0.8`
+
+## TODOS
+* Once nvim 0.10 is oficially released, we must replace `get_active_clients` by `get_clients`.
