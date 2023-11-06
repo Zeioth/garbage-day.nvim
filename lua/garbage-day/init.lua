@@ -47,7 +47,7 @@ function M.setup(opts)
         if grace_period_exceeded and not lsp_has_been_stopped then
           timer:stop()
           utils.start_lsp(stopped_lsp_clients) -- resets BufEnter
-          stopped_lsp_clients = utils.stop_lsp(config.excluded_languages)
+          stopped_lsp_clients = utils.stop_lsp(config.excluded_filetypes)
           if config.notifications then utils.notify("lsp_has_stopped") end
           lsp_has_been_stopped = true
         end
@@ -81,7 +81,7 @@ function M.setup(opts)
       if config.stop_invisible then
         -- Stop LSP for buffers not attached to a window in the current tab.
         utils.start_lsp(stopped_lsp_clients)
-        stopped_lsp_clients = utils.stop_invisible(config.excluded_languages)
+        stopped_lsp_clients = utils.stop_invisible(config.excluded_filetypes)
         if config.notifications then utils.notify("lsp_has_stopped") end
 
         -- fix for jdtls when using null-ls

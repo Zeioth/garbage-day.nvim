@@ -5,16 +5,16 @@ local M = {}
 -- ----------------------------------------------------------------------------
 
 ---Stop all lsp clients, including the ones in other tabs.
----@param excluded_languages table Languages where we don't want to stop LSP.
+---@param excluded_filetypes table Languages where we don't want to stop LSP.
 ---@return table stopped_lsp_clients So we can start them again on FocusGaind.
-function M.stop_lsp(excluded_languages)
+function M.stop_lsp(excluded_filetypes)
   local stopped_lsp_clients = {}
 
   -- Iterate all buffers.
   local buffers = vim.api.nvim_list_bufs()
   for _, buf in ipairs(buffers) do
     local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-    local is_lang_excluded = vim.tbl_contains(excluded_languages, filetype)
+    local is_lang_excluded = vim.tbl_contains(excluded_filetypes, filetype)
 
     if not is_lang_excluded then
       -- For each lsp client attached to the buffer.
@@ -61,14 +61,11 @@ function M.start_lsp(stopped_lsp_clients)
   end
 end
 
--- NON CORE EXTRA FEATURE
------------------------------------------------------------------------------
-
 ---Stop all lsp clients, including the ones in other tabs.
 --Except the ones currently asociated to a nvim window in the current tab.
----@param excluded_languages table Languages where we don't want to stop LSP.
+---@param excluded_filetypes table Languages where we don't want to stop LSP.
 ---@return table stopped_lsp_clients So we can start them again on BufEnter.
-function M.stop_invisible(excluded_languages)
+function M.stop_invisible(excluded_filetypes)
   local stopped_lsp_clients = {}
   local visible_filetypes = {}
 
@@ -84,17 +81,18 @@ function M.stop_invisible(excluded_languages)
     visible_filetypes[filetype] = true
   end
 
-  -- Stop LSP clients that are associated with invisible buffers
-  -- and don't match visible filetypes.
+  -- Iterate all lsp clients.
   for _, client in pairs(vim.lsp.get_clients()) do
+    -- For each buffer attached to the lsp client.
     for buf, _ in pairs(client.attached_buffers) do
+      -- If the buffer is not visible.
       if not vim.tbl_contains(visible_buffers, buf) then
         local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-        local is_lang_excluded = vim.tbl_contains(excluded_languages, filetype)
+        local is_lang_excluded = vim.tbl_contains(excluded_filetypes, filetype)
+        -- If the buffer doesn't have the filetype of a visible buffer.
+        -- If the buffer doesn't have a filetype we are excluding.
         if not visible_filetypes[filetype] and
-           not is_lang_excluded
-        then
-
+           not is_lang_excluded then
           -- Save the lsp client before stopping it - so we can resume it later.
           stopped_lsp_clients[buf] = stopped_lsp_clients[buf] or {}
           table.insert(stopped_lsp_clients[buf], client)
@@ -102,7 +100,6 @@ function M.stop_invisible(excluded_languages)
           -- Stop lsp client
           vim.lsp.stop_client(client.id)
           client.rpc.terminate()
-
         end
       end
     end
@@ -133,3 +130,4 @@ function M.notify(kind)
 end
 
 return M
+
