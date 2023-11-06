@@ -43,3 +43,6 @@ If you want to help me, please star this repository to increase the visibility o
 
 ## Other alternatives
 * [lsp-timeout](https://github.com/hinell/lsp-timeout.nvim): Recommended for nvim versions `<=0.8`
+
+## Known bugs
+`stop_invisible` opiton currently fail to restore clients after they have been stopped for a long time. Don't enable it for now.
