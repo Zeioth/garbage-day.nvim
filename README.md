@@ -45,4 +45,4 @@ If you want to help me, please star this repository to increase the visibility o
 * [lsp-timeout](https://github.com/hinell/lsp-timeout.nvim): Recommended for nvim versions `<=0.8`
 
 ## TODOS
-* Once nvim 0.10 is oficially released, we must replace `get_active_clients` by `get_clients`.
+* Once nvim 0.10 is oficially released and we drop 0.9 support, we must replace the [deprecated function](https://neovim.io/doc/user/deprecated.html#vim.lsp.buf_get_clients()) `get_active_clients` by `get_clients`.
