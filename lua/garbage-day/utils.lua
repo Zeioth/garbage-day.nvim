@@ -35,7 +35,7 @@ function M.stop_lsp(excluded_languages)
   return stopped_lsp_clients
 end
 
----Stop all lsp clients, including the ones in other tabs.
+---Start all previously stopped LSP clients.
 ---@param stopped_lsp_clients table A table like { { buf, client }, .. }
 function M.start_lsp(stopped_lsp_clients)
   -- For each buffer, check its attached clients.

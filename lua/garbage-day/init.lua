@@ -43,9 +43,10 @@ function M.setup(opts)
         current_time = os.time()
         elapsed_time = current_time - start_time
         grace_period_exceeded = elapsed_time >= config.grace_period
-        -- Grace period exceeded? Stop
+        -- Grace period exceeded? Stop LSP
         if grace_period_exceeded and not lsp_has_been_stopped then
           timer:stop()
+          utils.start_lsp(stopped_lsp_clients) -- resets BufEnter
           stopped_lsp_clients = utils.stop_lsp(config.excluded_languages)
           if config.notifications then utils.notify("lsp_has_stopped") end
           lsp_has_been_stopped = true
@@ -58,7 +59,6 @@ function M.setup(opts)
   -- Focus gained?
   vim.api.nvim_create_autocmd({ "FocusGained" }, {
     callback = function()
-
       if lsp_has_been_stopped then
         -- Start LSP
         utils.start_lsp(stopped_lsp_clients)
@@ -72,7 +72,6 @@ function M.setup(opts)
       elapsed_time = 0
       grace_period_exceeded = false
       lsp_has_been_stopped = false
-
     end
   })
 
@@ -84,6 +83,9 @@ function M.setup(opts)
         utils.start_lsp(stopped_lsp_clients)
         stopped_lsp_clients = utils.stop_invisible(config.excluded_languages)
         if config.notifications then utils.notify("lsp_has_stopped") end
+
+        -- fix for jdtls when using null-ls
+        pcall(function() require("null-ls").enable({}) end)
       end
     end
   })
