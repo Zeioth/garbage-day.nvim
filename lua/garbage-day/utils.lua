@@ -1,3 +1,6 @@
+-- TODO:
+-- Once nvim 0.10 is released, replace get_active_clients() by get_clients().
+
 local M = {}
 
 
@@ -18,9 +21,9 @@ function M.stop_lsp(excluded_filetypes)
 
     if not is_filetype_excluded then
       -- For each lsp client attached to the buffer.
-      for _, client in ipairs(vim.lsp.get_clients()) do
+      for _, client in ipairs(vim.lsp.get_active_clients()) do
         if client.attached_buffers and client.attached_buffers[buf] then
-          -- Save the lsp client before stopping it - so we can resume it later.
+          -- Save buf + client before stopping - so we can resume it later.
           stopped_lsp_clients[buf] = stopped_lsp_clients[buf] or {}
           table.insert(stopped_lsp_clients[buf], client)
 
@@ -36,13 +39,13 @@ function M.stop_lsp(excluded_filetypes)
 end
 
 ---Start all previously stopped LSP clients.
----@param stopped_lsp_clients table A table like { { buf, client }, .. }
+---@param stopped_lsp_clients table A table like { { buf, client }, ... }
 function M.start_lsp(stopped_lsp_clients)
   -- For each buffer, check its attached clients.
   for buf, clients in pairs(stopped_lsp_clients) do
     for _, client in ipairs(clients) do
       -- Client already running? Don't run it again, just attach.
-      local existing_clients = vim.lsp.get_clients()
+      local existing_clients = vim.lsp.get_active_clients()
       local is_client_running = false
       for _, existing_client in ipairs(existing_clients) do
         if existing_client.config.name == client.config.name then
@@ -82,7 +85,7 @@ function M.stop_invisible(excluded_filetypes)
   end
 
   -- Iterate all lsp clients.
-  for _, client in pairs(vim.lsp.get_clients()) do
+  for _, client in pairs(vim.lsp.get_active_clients()) do
     -- For each buffer attached to the lsp client.
     for buf, _ in pairs(client.attached_buffers) do
       local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
@@ -94,7 +97,7 @@ function M.stop_invisible(excluded_filetypes)
          not is_filetype_visible and
          not is_filetype_excluded
       then
-        -- Save the lsp client before stopping it - so we can resume it later.
+        -- Save buf + client before stopping - so we can resume it later.
         stopped_lsp_clients[buf] = stopped_lsp_clients[buf] or {}
         table.insert(stopped_lsp_clients[buf], client)
 
