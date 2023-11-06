@@ -34,22 +34,22 @@ end
 ---Start all previously stopped LSP clients.
 ---@param stopped_lsp_clients table A table like { [client] = buf, ... }
 function M.start_lsp(stopped_lsp_clients)
-  for client, buf in pairs(stopped_lsp_clients) do
+  for stopped_client, buf in pairs(stopped_lsp_clients) do
 
-    -- Client already running? Don't run it again, just attach.
-    local existing_clients = vim.lsp.get_active_clients()
     local is_client_running = false
-    for _, existing_client in ipairs(existing_clients) do
-      if existing_client.config.name == client.config.name then
+
+    -- Client running? Don't start it again, just attach.
+    for _, running_client in ipairs(vim.lsp.get_active_clients()) do
+      if running_client.config.name == stopped_client.config.name then
         is_client_running = true
-        vim.lsp.buf_attach_client(buf, existing_client.id)
+        vim.lsp.buf_attach_client(buf, running_client.id)
         break -- No need to check further, found the running client
       end
     end
 
-    -- Client not running? Run and attach.
+    -- Client not running? Start and attach.
     if not is_client_running then
-      local new_client_id = vim.lsp.start_client(client.config)
+      local new_client_id = vim.lsp.start_client(stopped_client.config)
       vim.lsp.buf_attach_client(buf, new_client_id)
     end
 
