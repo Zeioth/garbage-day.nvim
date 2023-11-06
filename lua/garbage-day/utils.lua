@@ -6,65 +6,62 @@ local M = {}
 
 ---Stop all lsp clients, including the ones in other tabs.
 ---@param excluded_filetypes table Languages where we don't want to stop LSP.
----@return table stopped_lsp_clients So we can start them again on FocusGaind.
+---@return table stopped_lsp_clients A table like { [client] = buf, ... }
+--So we can start them again on FocusGaind.
 function M.stop_lsp(excluded_filetypes)
   local stopped_lsp_clients = {}
+  for _, client in pairs(vim.lsp.get_active_clients()) do
+    for buf, _ in pairs(client.attached_buffers) do
 
-  -- Iterate all buffers.
-  local buffers = vim.api.nvim_list_bufs()
-  for _, buf in ipairs(buffers) do
-    local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-    local is_filetype_excluded = vim.tbl_contains(excluded_filetypes, filetype)
+      -- If all conditions pass
+      local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
+      local is_filetype_excluded = vim.tbl_contains(excluded_filetypes, filetype)
+      if not is_filetype_excluded then
+        -- save client + attached buf before stopping - to resume it later.
+        stopped_lsp_clients[client] = buf
 
-    if not is_filetype_excluded then
-      -- For each lsp client attached to the buffer.
-      for _, client in ipairs(vim.lsp.get_active_clients()) do
-        if client.attached_buffers and client.attached_buffers[buf] then
-          -- Save buf + client before stopping - so we can resume it later.
-          stopped_lsp_clients[buf] = stopped_lsp_clients[buf] or {}
-          table.insert(stopped_lsp_clients[buf], client)
-
-          -- Stop lsp client
-          vim.lsp.stop_client(client.id)
-          client.rpc.terminate()
-        end
+        -- stop lsp client
+        vim.lsp.stop_client(client.id)
+        client.rpc.terminate()
       end
+
     end
   end
-
   return stopped_lsp_clients
 end
 
----Start all previously stopped LSP clients.
----@param stopped_lsp_clients table A table like { { buf, client }, ... }
-function M.start_lsp(stopped_lsp_clients)
-  -- For each buffer, check its attached clients.
-  for buf, clients in pairs(stopped_lsp_clients) do
-    for _, client in ipairs(clients) do
-      -- Client already running? Don't run it again, just attach.
-      local existing_clients = vim.lsp.get_active_clients()
-      local is_client_running = false
-      for _, existing_client in ipairs(existing_clients) do
-        if existing_client.config.name == client.config.name then
-          is_client_running = true
-          vim.lsp.buf_attach_client(buf, existing_client.id)
-          break -- No need to check further, found the running client
-        end
-      end
 
-      -- Client not running? Run and attach
-      if not is_client_running then
-        local new_client_id = vim.lsp.start_client(client.config)
-        vim.lsp.buf_attach_client(buf, new_client_id)
+---Start all previously stopped LSP clients.
+---@param stopped_lsp_clients table A table like { [client] = buf, ... }
+function M.start_lsp(stopped_lsp_clients)
+  for client, buf in pairs(stopped_lsp_clients) do
+
+    -- Client already running? Don't run it again, just attach.
+    local existing_clients = vim.lsp.get_active_clients()
+    local is_client_running = false
+    for _, existing_client in ipairs(existing_clients) do
+      if existing_client.config.name == client.config.name then
+        is_client_running = true
+        vim.lsp.buf_attach_client(buf, existing_client.id)
+        break -- No need to check further, found the running client
       end
     end
+
+    -- Client not running? Run and attach
+    if not is_client_running then
+      local new_client_id = vim.lsp.start_client(client.config)
+      vim.lsp.buf_attach_client(buf, new_client_id)
+    end
+
   end
 end
+
 
 ---Stop all lsp clients, including the ones in other tabs.
 --Except the ones currently asociated to a nvim window in the current tab.
 ---@param excluded_filetypes table Languages where we don't want to stop LSP.
----@return table stopped_lsp_clients So we can start them again on BufEnter.
+---@return table stopped_lsp_clients A table like { [client] = buf, ... }
+--So we can start them again on BufEnter.
 function M.stop_invisible(excluded_filetypes)
   local stopped_lsp_clients = {}
   local visible_filetypes = {}
@@ -94,9 +91,8 @@ function M.stop_invisible(excluded_filetypes)
          not is_filetype_visible and
          not is_filetype_excluded
       then
-        -- Save buf + client before stopping - so we can resume it later.
-        stopped_lsp_clients[buf] = stopped_lsp_clients[buf] or {}
-        table.insert(stopped_lsp_clients[buf], client)
+        -- save client + attached buf before stopping - to resume it later.
+        stopped_lsp_clients[client] = buf
 
         -- Stop lsp client
         vim.lsp.stop_client(client.id)
@@ -130,4 +126,3 @@ function M.notify(kind)
 end
 
 return M
-
