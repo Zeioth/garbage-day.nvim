@@ -14,9 +14,9 @@ function M.stop_lsp(excluded_filetypes)
   local buffers = vim.api.nvim_list_bufs()
   for _, buf in ipairs(buffers) do
     local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-    local is_lang_excluded = vim.tbl_contains(excluded_filetypes, filetype)
+    local is_filetype_excluded = vim.tbl_contains(excluded_filetypes, filetype)
 
-    if not is_lang_excluded then
+    if not is_filetype_excluded then
       -- For each lsp client attached to the buffer.
       for _, client in ipairs(vim.lsp.get_clients()) do
         if client.attached_buffers and client.attached_buffers[buf] then
@@ -85,22 +85,22 @@ function M.stop_invisible(excluded_filetypes)
   for _, client in pairs(vim.lsp.get_clients()) do
     -- For each buffer attached to the lsp client.
     for buf, _ in pairs(client.attached_buffers) do
-      -- If the buffer is not visible.
-      if not vim.tbl_contains(visible_buffers, buf) then
-        local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-        local is_lang_excluded = vim.tbl_contains(excluded_filetypes, filetype)
-        -- If the buffer doesn't have the filetype of a visible buffer.
-        -- If the buffer doesn't have a filetype we are excluding.
-        if not visible_filetypes[filetype] and
-           not is_lang_excluded then
-          -- Save the lsp client before stopping it - so we can resume it later.
-          stopped_lsp_clients[buf] = stopped_lsp_clients[buf] or {}
-          table.insert(stopped_lsp_clients[buf], client)
+      local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
+      local is_buf_visible = vim.tbl_contains(visible_buffers, buf)
+      local is_filetype_visible = visible_filetypes[filetype]
+      local is_filetype_excluded = vim.tbl_contains(excluded_filetypes, filetype)
+      -- If all conditions pass
+      if not is_buf_visible and
+         not is_filetype_visible and
+         not is_filetype_excluded
+      then
+        -- Save the lsp client before stopping it - so we can resume it later.
+        stopped_lsp_clients[buf] = stopped_lsp_clients[buf] or {}
+        table.insert(stopped_lsp_clients[buf], client)
 
-          -- Stop lsp client
-          vim.lsp.stop_client(client.id)
-          client.rpc.terminate()
-        end
+        -- Stop lsp client
+        vim.lsp.stop_client(client.id)
+        client.rpc.terminate()
       end
     end
   end
