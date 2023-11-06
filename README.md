@@ -39,7 +39,7 @@ If you want to help me, please star this repository to increase the visibility o
 [![Stargazers over time](https://starchart.cc/Zeioth/garbage-day.nvim.svg)](https://starchart.cc/Zeioth/garbage-day.nvim)
 
 ## Where do that cheesy name come from?
-[It comes from the beloved meme](https://knowyourmeme.com/memes/garbage-day)
+* [It comes from the beloved meme](https://knowyourmeme.com/memes/garbage-day)
 
 ## Other alternatives
 * [lsp-timeout](https://github.com/hinell/lsp-timeout.nvim): Recommended for nvim versions `<=0.8`
