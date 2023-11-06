@@ -66,10 +66,8 @@ end
 
 ---Stop all lsp clients, including the ones in other tabs.
 --Except the ones currently asociated to a nvim window in the current tab.
---NOTE: null-ls is not compatible with this feature, so its LSP client
---      won't be stopped.
 ---@param excluded_languages table Languages where we don't want to stop LSP.
----@return table stopped_lsp_clients So we can start them again on FocusGaind.
+---@return table stopped_lsp_clients So we can start them again on BufEnter.
 function M.stop_invisible(excluded_languages)
   local stopped_lsp_clients = {}
   local visible_filetypes = {}
@@ -94,8 +92,7 @@ function M.stop_invisible(excluded_languages)
         local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
         local is_lang_excluded = vim.tbl_contains(excluded_languages, filetype)
         if not visible_filetypes[filetype] and
-           not is_lang_excluded and
-           not client.config.name == "null-ls"
+           not is_lang_excluded
         then
 
           -- Save the lsp client before stopping it - so we can resume it later.
