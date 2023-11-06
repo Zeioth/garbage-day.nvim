@@ -23,11 +23,10 @@ Add this to lazy
 
 | Name | Default | Description |
 |--|--|--|
-| `grace_period` | `60*15` | Seconds to wait before stopping all LSP clients after neovim loses focus. |
-| `stop_invisible` | `false` | Set it to `true` to stop all LSP clients except the ones used by the visible buffers. This happen every time you change to a different buffer. This ensures the minimum RAM consumption. If your CPU is not very powerful, it might take a few seconds to bring back LSP, so disable this option if you need.
 | `excluded_filetypes` | `{"java", "markdown"}` | Languages whose LSP clients will never be stopped. Useful for LSP clients that miss behave. |
+| `grace_period` | `60*15` | Seconds to wait before stopping all LSP clients after neovim loses focus. |
 | `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. |
-
+| `stop_invisible` | `false` | Set it to `true` to stop all LSP clients except the ones used by the visible buffers. This happen every time you change to a different buffer. This ensures the minimum RAM consumption. If your CPU is not very powerful, it might take a few seconds to bring back LSP, so disable this option if you need.
 
 ## FAQ
 
