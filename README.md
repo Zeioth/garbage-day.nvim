@@ -12,7 +12,7 @@ Add this to lazy
 ```lua
 {
   "zeioth/garbage-day.nvim",
-  event = "BufEnter",
+  event = "VeryLazy",
   opts = {
     -- your options here
   }
