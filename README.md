@@ -25,13 +25,15 @@ Add this to lazy
 },
 ```
 
+We also support changing opts on execution time like `:let g:garbage_day_config['option'] = 'value'`
+`
+
 ## Available options
 
 | Name | Default | Description |
 |--|--|--|
 | `grace_period` | `60*15` | Seconds to wait before stopping all LSP clients after neovim loses focus. |
 | `excluded_lsp_clients` | `{"null-ls"}` | LSP clients that should never be stopped. Useful for LSP clients that miss behave. |
-| `excluded_filetypes` | `{"java", "markdown"}` | All LSP clients of the excluded filetype will never be stopped. |
 | `stop_invisible` | `false` | Set it to `true` to stop all LSP clients except the ones used by the visible buffers. This happen every time you 
 change to a different buffer. This ensures the minimum RAM consumption. NOTE: If your CPU is not very powerful, it might take a few seconds to bring back LSP, so disable this option if you need.
 | `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. |
