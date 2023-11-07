@@ -66,7 +66,6 @@ function M.setup(opts)
       end
 
       -- Reset state
-      stopped_lsp_clients = {}
       start_time = os.time()
       current_time = 0
       elapsed_time = 0
