@@ -84,7 +84,7 @@ function M.setup(opts)
         stopped_lsp_clients = utils.stop_invisible(config.excluded_filetypes)
         if config.notifications then utils.notify("lsp_has_stopped") end
 
-        -- fix for null-ls on certain lsp clients
+        -- fix for null-ls
         pcall(function() require("null-ls").enable({}) end)
       end
     end
