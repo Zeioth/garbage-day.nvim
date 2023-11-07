@@ -3,6 +3,12 @@ Garbage collector that stops inactive LSP clients to free RAM
 
 ![screenshot_2023-11-05_23-22-27_341640170](https://github.com/Zeioth/garbage-day.nvim/assets/3357792/76c2042e-39e2-4a94-b7a4-251bd41f2e04)
 
+<div align="center">
+  <a href="https://discord.gg/ymcMaSnq7d" rel="nofollow">
+    <img src="https://img.shields.io/discord/1121138836525813760?color=azure&labelColor=6DC2A4&logo=discord&logoColor=black&label=Join the discord server&style=for-the-badge" data-canonical-src="https://img.shields.io/discord/1121138836525813760">
+  </a>
+</div>
+
 ## Why
 In many scenarios, unmanaged LSP clients running on background can take several Gb of RAM. So I wrote this LSP garbage collector for [NormalNvim](https://github.com/NormalNvim/NormalNvim) to auto free it. It has no dependencies, so you can use it on any distro.
 
@@ -12,7 +18,7 @@ Add this to lazy
 ```lua
 {
   "zeioth/garbage-day.nvim",
-  event = "BufEnter",
+  event = "VeryLazy",
   opts = {
     -- your options here
   }
@@ -39,7 +45,7 @@ If you want to help me, please star this repository to increase the visibility o
 [![Stargazers over time](https://starchart.cc/Zeioth/garbage-day.nvim.svg)](https://starchart.cc/Zeioth/garbage-day.nvim)
 
 ## Where do that cheesy name come from?
-[It comes from the beloved meme](https://knowyourmeme.com/memes/garbage-day)
+* [It comes from the beloved meme](https://knowyourmeme.com/memes/garbage-day)
 
 ## Other alternatives
 * [lsp-timeout](https://github.com/hinell/lsp-timeout.nvim): Recommended for nvim versions `<=0.8`
