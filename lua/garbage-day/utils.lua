@@ -1,6 +1,5 @@
 local M = {}
 
-
 -- CORE UTILS
 -- ----------------------------------------------------------------------------
 
@@ -9,18 +8,14 @@ local M = {}
 ---So we can start them again on FocusGaind.
 function M.stop_lsp()
   local config = vim.g.garbage_day_config
-
   local stopped_lsp_clients = {}
   for _, client in pairs(vim.lsp.get_active_clients()) do
     for buf, _ in pairs(client.attached_buffers) do
+      local is_lsp_client_excluded =
+          vim.tbl_contains(config.excluded_lsp_clients, client.config.name)
 
       -- If all conditions pass
-      local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-      local is_filetype_excluded = vim.tbl_contains(config.excluded_filetypes, filetype)
-      local is_lsp_client_excluded = vim.tbl_contains(config.excluded_lsp_clients, client.config.name)
-      if not is_filetype_excluded and
-         not is_lsp_client_excluded
-      then
+      if not is_lsp_client_excluded then
         -- save client+buf for later
         stopped_lsp_clients[client] = buf
 
@@ -39,7 +34,6 @@ end
 ---@param stopped_lsp_clients table A table like { [client] = buf, ... }
 function M.start_lsp(stopped_lsp_clients)
   for stopped_client, buf in pairs(stopped_lsp_clients) do
-
     local is_client_running = false
 
     -- Client running? Don't start it again, just attach.
@@ -69,7 +63,6 @@ end
 ---@return table stopped_lsp_clients A table like { [client] = buf, ... }
 ---So we can start them again on BufEnter.
 function M.stop_invisible()
-  -- get config
   local config = vim.g.garbage_day_config
 
   -- Get all visible filetypes in the current tab.
@@ -92,12 +85,12 @@ function M.stop_invisible()
       local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
       local is_buf_visible = vim.tbl_contains(visible_buffers, buf)
       local is_filetype_visible = visible_filetypes[filetype]
-      local is_filetype_excluded = vim.tbl_contains(config.excluded_filetypes, filetype)
-      local is_lsp_client_excluded = vim.tbl_contains(config.excluded_lsp_clients, client.config.name)
+      local is_lsp_client_excluded =
+          vim.tbl_contains(config.excluded_lsp_clients, client.config.name)
+
       -- If all conditions pass
       if not is_buf_visible and
          not is_filetype_visible and
-         not is_filetype_excluded and
          not is_lsp_client_excluded
       then
         -- save client+buf for later
@@ -107,6 +100,7 @@ function M.stop_invisible()
         vim.lsp.stop_client(client.id)
         client.rpc.terminate()
       end
+
     end
   end
 
@@ -136,4 +130,3 @@ end
 
 
 return M
-

@@ -14,6 +14,8 @@
 --              currently asociated to a window in the current tab.
 -- ----------------------------------------------------------------------------
 
+
+local M = {}
 local uv = vim.uv or vim.loop
 local utils = require("garbage-day.utils")
 local config = require("garbage-day.config")
@@ -22,12 +24,10 @@ local timer = uv.new_timer() -- Can store ~29377 years
 local start_time = os.time()
 local current_time = 0
 local elapsed_time = 0
+
 local grace_period_exceeded = false
 local lsp_has_been_stopped = false
-
 local stopped_lsp_clients = {}
-
-local M = {}
 
 
 --- Entry point of the program
@@ -48,7 +48,7 @@ function M.setup(opts)
         if grace_period_exceeded and not lsp_has_been_stopped then
           timer:stop()
           utils.start_lsp(stopped_lsp_clients) -- resets BufEnter
-          stopped_lsp_clients = utils.stop_lsp(config.excluded_filetypes)
+          stopped_lsp_clients = utils.stop_lsp()
           if config.notifications then utils.notify("lsp_has_stopped") end
           lsp_has_been_stopped = true
         end
@@ -81,13 +81,8 @@ function M.setup(opts)
       if config.stop_invisible then
         -- Stop LSP for buffers not attached to a window in the current tab.
         utils.start_lsp(stopped_lsp_clients)
-        stopped_lsp_clients = utils.stop_invisible(config.excluded_filetypes)
+        stopped_lsp_clients = utils.stop_invisible()
         if config.notifications then utils.notify("lsp_has_stopped") end
-
-        -- fix for null-ls
-        if not vim.tbl_contains(config.excluded_lsp_clients, 'null-ls') then
-          pcall(function() require("null-ls").enable({}) end)
-        end
       end
     end
   })
