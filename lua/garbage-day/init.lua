@@ -33,6 +33,7 @@ local M = {}
 --- Entry point of the program
 function M.setup(opts)
   config.set(opts)
+  vim.g.garbage_day_config = config
 
   -- Focus lost?
   vim.api.nvim_create_autocmd({ "FocusLost" }, {
@@ -84,7 +85,9 @@ function M.setup(opts)
         if config.notifications then utils.notify("lsp_has_stopped") end
 
         -- fix for null-ls
-        pcall(function() require("null-ls").enable({}) end)
+        if not vim.tbl_contains(config.excluded_lsp_clients, 'null-ls') then
+          pcall(function() require("null-ls").enable({}) end)
+        end
       end
     end
   })

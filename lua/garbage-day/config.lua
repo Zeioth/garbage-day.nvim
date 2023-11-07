@@ -4,6 +4,7 @@ local M = {}
 function M.set(opts)
   M.grace_period = opts.grace_period or (60*15) -- seconds
   M.excluded_filetypes = opts.excluded_filetypes or { "java", "markdown" }
+  M.excluded_lsp_clients = opts.excluded_lsp_clients or { "null-ls" }
   M.stop_invisible = opts.stop_invisible or false
   M.notifications = opts.notifications or false
 end

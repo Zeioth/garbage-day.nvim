@@ -5,18 +5,22 @@ local M = {}
 -- ----------------------------------------------------------------------------
 
 ---Stop all lsp clients, including the ones in other tabs.
----@param excluded_filetypes table Languages where we don't want to stop LSP.
 ---@return table stopped_lsp_clients A table like { [client] = buf, ... }
 ---So we can start them again on FocusGaind.
-function M.stop_lsp(excluded_filetypes)
+function M.stop_lsp()
+  local config = vim.g.garbage_day_config
+
   local stopped_lsp_clients = {}
   for _, client in pairs(vim.lsp.get_active_clients()) do
     for buf, _ in pairs(client.attached_buffers) do
 
       -- If all conditions pass
       local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-      local is_filetype_excluded = vim.tbl_contains(excluded_filetypes, filetype)
-      if not is_filetype_excluded then
+      local is_filetype_excluded = vim.tbl_contains(config.excluded_filetypes, filetype)
+      local is_lsp_client_excluded = vim.tbl_contains(config.excluded_lsp_clients, client.config.name)
+      if not is_filetype_excluded and
+         not is_lsp_client_excluded
+      then
         -- save client+buf for later
         stopped_lsp_clients[client] = buf
 
@@ -62,15 +66,16 @@ end
 
 ---Stop all lsp clients, including the ones in other tabs.
 --Except the ones currently asociated to a nvim window in the current tab.
----@param excluded_filetypes table Languages where we don't want to stop LSP.
 ---@return table stopped_lsp_clients A table like { [client] = buf, ... }
 ---So we can start them again on BufEnter.
-function M.stop_invisible(excluded_filetypes)
+function M.stop_invisible()
+  -- get config
+  local config = vim.g.garbage_day_config
+
+  -- Get all visible filetypes in the current tab.
   local stopped_lsp_clients = {}
   local visible_buffers = {}
   local visible_filetypes = {}
-
-  -- Get all visible filetypes in the current tab.
   local current_tab = vim.api.nvim_get_current_tabpage()
   local visible_windows = vim.api.nvim_tabpage_list_wins(current_tab)
   for _, win in ipairs(visible_windows) do
@@ -87,11 +92,13 @@ function M.stop_invisible(excluded_filetypes)
       local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
       local is_buf_visible = vim.tbl_contains(visible_buffers, buf)
       local is_filetype_visible = visible_filetypes[filetype]
-      local is_filetype_excluded = vim.tbl_contains(excluded_filetypes, filetype)
+      local is_filetype_excluded = vim.tbl_contains(config.excluded_filetypes, filetype)
+      local is_lsp_client_excluded = vim.tbl_contains(config.excluded_lsp_clients, client.config.name)
       -- If all conditions pass
       if not is_buf_visible and
          not is_filetype_visible and
-         not is_filetype_excluded
+         not is_filetype_excluded and
+         not is_lsp_client_excluded
       then
         -- save client+buf for later
         stopped_lsp_clients[client] = buf
@@ -129,3 +136,4 @@ end
 
 
 return M
+
