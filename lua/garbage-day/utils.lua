@@ -7,7 +7,7 @@ local M = {}
 ---Stop all lsp clients, including the ones in other tabs.
 ---@param excluded_filetypes table Languages where we don't want to stop LSP.
 ---@return table stopped_lsp_clients A table like { [client] = buf, ... }
---- So we can start them again on FocusGaind.
+---So we can start them again on FocusGaind.
 function M.stop_lsp(excluded_filetypes)
   local stopped_lsp_clients = {}
   for _, client in pairs(vim.lsp.get_active_clients()) do
@@ -64,7 +64,7 @@ end
 --Except the ones currently asociated to a nvim window in the current tab.
 ---@param excluded_filetypes table Languages where we don't want to stop LSP.
 ---@return table stopped_lsp_clients A table like { [client] = buf, ... }
---- So we can start them again on BufEnter.
+---So we can start them again on BufEnter.
 function M.stop_invisible(excluded_filetypes)
   local stopped_lsp_clients = {}
   local visible_buffers = {}
