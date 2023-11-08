@@ -80,7 +80,7 @@ function M.setup(opts)
         vim.defer_fn(function()
           utils.stop_lsp()
           utils.start_lsp()
-        if config.notifications then utils.notify("lsp_has_stopped") end
+          if config.notifications then utils.notify("lsp_has_stopped") end
         end, 100)
       end
     end
