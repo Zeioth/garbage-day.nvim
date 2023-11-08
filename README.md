@@ -47,7 +47,7 @@ To avoid issues make sure the value of `grace_period` is higher than `retries`. 
 * `Can I manually trigger garbage collection?` Yes, you can create a keymapping like
 ```lua
 require("garbage-day.utils").stop_lsp()  -- stop all lsp clients
-require("garbage-day.utils").start_lsp() -- start lsp clients for current buffer
+require("garbage-day.utils").start_lsp() -- start lsp clients for the current buffer
 ```
   
 ## 🌟 Support the project
