@@ -6,12 +6,11 @@
 -- FocusLost:   When the mouse leaves neovim, stop all LSP clients
 --              after a grace period.
 --
--- FocusGained: When the mouse enters neovim, start all the
---              previously stopped LSP clients.
+-- FocusGained: When the mouse enters neovim, start all LSP
+--              for the current buffer.
 --
 -- BufEnter:    This is a extra, non core feature.
---              When entering a buffer, stop all LSP clients except the ones
---              currently asociated to a window in the current tab.
+--              Stop all LSP clients except the current buffer.
 -- ----------------------------------------------------------------------------
 
 
@@ -27,7 +26,6 @@ local elapsed_time = 0
 
 local grace_period_exceeded = false
 local lsp_has_been_stopped = false
-local stopped_lsp_clients = {}
 
 
 --- Entry point of the program
@@ -47,8 +45,7 @@ function M.setup(opts)
         -- Grace period exceeded? Stop LSP
         if grace_period_exceeded and not lsp_has_been_stopped then
           timer:stop()
-          utils.start_lsp(stopped_lsp_clients) -- resets BufEnter
-          stopped_lsp_clients = utils.stop_lsp()
+          utils.stop_lsp()
           if config.notifications then utils.notify("lsp_has_stopped") end
           lsp_has_been_stopped = true
         end
@@ -60,9 +57,10 @@ function M.setup(opts)
   -- Focus gained?
   vim.api.nvim_create_autocmd({ "FocusGained" }, {
     callback = function()
+      -- Start LSP
       if lsp_has_been_stopped then
-        -- Start LSP
-        utils.start_lsp(stopped_lsp_clients)
+        vim.defer_fn(function() vim.cmd(":LspStart") end, 120)
+        vim.defer_fn(function() pcall(function() require("null-ls").enable({}) end) end, 200)
         if config.notifications then utils.notify("lsp_has_started") end
       end
 
@@ -76,13 +74,14 @@ function M.setup(opts)
   })
 
   -- Buffer entered?
-  vim.api.nvim_create_autocmd({ "BufEnter" }, {
+  vim.api.nvim_create_autocmd({ "BufEnter"}, {
     callback = function()
-      if config.stop_invisible then
-        -- Stop LSP for buffers not attached to a window in the current tab.
-        utils.start_lsp(stopped_lsp_clients)
-        stopped_lsp_clients = utils.stop_invisible()
+      if config.aggressive_mode then
+        vim.defer_fn(function()
+          utils.stop_lsp()
+          utils.start_lsp()
         if config.notifications then utils.notify("lsp_has_stopped") end
+        end, 100)
       end
     end
   })

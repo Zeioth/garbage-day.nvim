@@ -1,110 +1,55 @@
 local M = {}
+local uv = vim.uv or vim.loop
+
 
 -- CORE UTILS
 -- ----------------------------------------------------------------------------
 
 ---Stop all lsp clients, including the ones in other tabs.
----@return table stopped_lsp_clients A table like { [client] = buf, ... }
----So we can start them again on FocusGaind.
 function M.stop_lsp()
   local config = vim.g.garbage_day_config
-  local stopped_lsp_clients = {}
   for _, client in pairs(vim.lsp.get_active_clients()) do
-    for buf, _ in pairs(client.attached_buffers) do
-      local is_lsp_client_excluded =
-          vim.tbl_contains(config.excluded_lsp_clients, client.config.name)
+    local is_lsp_client_excluded =
+        vim.tbl_contains(config.excluded_lsp_clients, client.config.name)
 
-      -- If all conditions pass
-      if not is_lsp_client_excluded then
-        -- save client+buf for later
-        stopped_lsp_clients[client] = buf
-
-        -- stop lsp client
-        vim.lsp.stop_client(client.id)
-        client.rpc.terminate()
-      end
-
-    end
-  end
-  return stopped_lsp_clients
-end
-
-
----Start all previously stopped LSP clients.
----@param stopped_lsp_clients table A table like { [client] = buf, ... }
-function M.start_lsp(stopped_lsp_clients)
-  for stopped_client, buf in pairs(stopped_lsp_clients) do
-    local is_client_running = false
-
-    -- Client running? Don't start it again, just attach.
-    for _, running_client in ipairs(vim.lsp.get_active_clients()) do
-      if running_client.config.name == stopped_client.config.name then
-        is_client_running = true
-        vim.lsp.buf_attach_client(buf, running_client.id)
-        break -- No need to check further, found the running client
-      end
-    end
-
-    -- Client not running? Start and attach.
-    if not is_client_running then
-      local new_client_id = vim.lsp.start_client(stopped_client.config)
-      vim.lsp.buf_attach_client(buf, new_client_id)
+    -- If all conditions pass
+    if not is_lsp_client_excluded then
+      -- Stop lsp client
+      vim.lsp.stop_client(client.id)
+      client.rpc.terminate()
     end
 
   end
 end
 
-
--- EXTRA FEATURES
--- ----------------------------------------------------------------------------
-
----Stop all lsp clients, including the ones in other tabs.
---Except the ones currently asociated to a nvim window in the current tab.
----@return table stopped_lsp_clients A table like { [client] = buf, ... }
----So we can start them again on BufEnter.
-function M.stop_invisible()
+---Start lsp clients for the current buffer.
+--Clients will try to start once per second for n retries.
+function M.start_lsp()
   local config = vim.g.garbage_day_config
+  local timer = uv.new_timer() -- Can store ~29377 years
+  local start_time = os.time()
+  local retries = config.retries -- seconds
+  local grace_period_exceeded = false
 
-  -- Get all visible filetypes in the current tab.
-  local stopped_lsp_clients = {}
-  local visible_buffers = {}
-  local visible_filetypes = {}
-  local current_tab = vim.api.nvim_get_current_tabpage()
-  local visible_windows = vim.api.nvim_tabpage_list_wins(current_tab)
-  for _, win in ipairs(visible_windows) do
-    local buf = vim.api.nvim_win_get_buf(win)
-    local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-    table.insert(visible_buffers, buf)
-    visible_filetypes[filetype] = true
-  end
+  local timer_callback
+  timer_callback = vim.schedule_wrap(function()
+    local current_time = os.time()
+    local elapsed_time = current_time - start_time
+    grace_period_exceeded = elapsed_time >= retries
 
-  -- Iterate all lsp clients.
-  for _, client in pairs(vim.lsp.get_active_clients()) do
-    -- For each buffer attached to the lsp client
-    for buf, _ in pairs(client.attached_buffers) do
-      local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
-      local is_buf_visible = vim.tbl_contains(visible_buffers, buf)
-      local is_filetype_visible = visible_filetypes[filetype]
-      local is_lsp_client_excluded =
-          vim.tbl_contains(config.excluded_lsp_clients, client.config.name)
+    -- Start LSP
+    vim.cmd(":LspStart")
+    pcall(function() require("null-ls").enable({}) end)
 
-      -- If all conditions pass
-      if not is_buf_visible and
-         not is_filetype_visible and
-         not is_lsp_client_excluded
-      then
-        -- save client+buf for later
-        stopped_lsp_clients[client] = buf
-
-        -- Stop lsp client
-        vim.lsp.stop_client(client.id)
-        client.rpc.terminate()
-      end
-
+    if grace_period_exceeded then
+      timer:stop()
+      timer:close()
+    else
+      timer:start(1000, 1000, timer_callback)
     end
-  end
+  end)
 
-  return stopped_lsp_clients
+  timer:start(1000, 1000, timer_callback)
 end
 
 
@@ -115,7 +60,6 @@ end
 ---@param kind string Accepted values are:
 ---{ "lsp_has_started", "lsp_has_stopped" }
 function M.notify(kind)
-
   if kind == "lsp_has_started" then
     vim.notify("Re-starting LSP clients on focus recovered.", vim.log.levels.INFO, {
       title = "garbage-day.nvim"
@@ -125,8 +69,8 @@ function M.notify(kind)
       title = "garbage-day.nvim"
     })
   end
-
 end
 
 
 return M
+
