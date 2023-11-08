@@ -48,7 +48,6 @@ function M.start_lsp()
       timer:start(1000, 1000, timer_callback)
     end
   end)
-
   timer:start(1000, 1000, timer_callback)
 end
 
