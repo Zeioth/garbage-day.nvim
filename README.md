@@ -1,7 +1,7 @@
 # garbage-day.nvim
 Garbage collector that stops inactive LSP clients to free RAM
 
-![screenshot_2023-11-07_01-45-44_431834829](https://github.com/Zeioth/garbage-day.nvim/assets/3357792/703d2af6-58cb-4061-a485-41c1c8432696)
+![screenshot_2023-11-08_08-12-12_851558101](https://github.com/Zeioth/garbage-day.nvim/assets/3357792/e4dbd49e-5470-4d1a-939b-1b55d9b2d97c)
 
 <div align="center">
   <a href="https://discord.gg/ymcMaSnq7d" rel="nofollow">
