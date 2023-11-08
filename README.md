@@ -39,10 +39,11 @@ We also support changing opts on execution time like `:let g:garbage_day_config[
 | `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. |
 | `retries` | `3` | Seconds to keep trying to resume a client before giving up. |
 
+To avoid issues, make sure you don't set a `grace_period` lower than the value of `retries`.
+
 ## FAQ
 
 * `If it doesn't work`: This plugin has been tested with neovim 0.9 and 0.10. If you are in a neovim version superior to nvim 0.10, and it doesn't work, please [open a issue tagging me](https://github.com/Zeioth/garbage-day.nvim/issues) and I will fix it.
-
 ## 🌟 Support the project
 If you want to help me, please star this repository to increase the visibility of the project.
 
