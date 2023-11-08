@@ -6,7 +6,7 @@ function M.set(opts)
   M.excluded_lsp_clients = opts.excluded_lsp_clients or { "jdtls" }
   M.aggressive_mode = opts.aggressive_mode or false
   M.notifications = opts.notifications or false
-  M.retries = opts.retries or 4
+  M.retries = opts.retries or 3
 end
 
 return M
