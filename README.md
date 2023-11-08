@@ -39,7 +39,7 @@ We also support changing opts on execution time like `:let g:garbage_day_config[
 | `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. |
 | `retries` | `3` | Seconds to keep trying to resume a client before giving up. |
 
-To avoid issues, make sure you don't set a `grace_period` lower than the value of `retries`.
+To avoid issues make sure the value of `grace_period` is higher than `retries`. Otherwise you are trying to start and stop LSP at the same time.
 
 ## FAQ
 
