@@ -37,7 +37,7 @@ We also support changing opts on execution time like `:let g:garbage_day_config[
 | `excluded_lsp_clients` | `{"jdtls"}` | LSP clients that should never be stopped. Useful for LSP clients that miss behave. |
 | `grace_period` | `60*15` | Seconds to wait before stopping all LSP clients after neovim loses focus. |
 | `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. |
-| `retries` | `4` | Seconds to keep trying to resume a client before giving up. |
+| `retries` | `3` | Seconds to keep trying to resume a client before giving up. |
 
 ## FAQ
 
