@@ -39,10 +39,17 @@ We also support changing opts on execution time like `:let g:garbage_day_config[
 | `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. |
 | `retries` | `3` | Seconds to keep trying to resume a client before giving up. |
 
+To avoid issues make sure the value of `grace_period` is higher than `retries`. Otherwise you will be trying to start and stop LSP at the same time.
+
 ## FAQ
 
 * `If it doesn't work`: This plugin has been tested with neovim 0.9 and 0.10. If you are in a neovim version superior to nvim 0.10, and it doesn't work, please [open a issue tagging me](https://github.com/Zeioth/garbage-day.nvim/issues) and I will fix it.
-
+* `Can I manually trigger garbage collection?` Yes, you can create a keymapping like
+```lua
+require("garbage-day.utils").stop_lsp()  -- stop all lsp clients
+require("garbage-day.utils").start_lsp() -- start lsp clients for the current buffer
+```
+  
 ## 🌟 Support the project
 If you want to help me, please star this repository to increase the visibility of the project.
 
