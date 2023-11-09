@@ -38,7 +38,7 @@ We also support changing opts on execution time like `:let g:garbage_day_config[
 | `grace_period` | `60*15` | Seconds to wait before stopping all LSP clients after neovim loses focus. |
 
 
-## Advanced options
+## Debug options
 You can tweak them in case some particular LSP client don't start/stop correctly on your machine.
 
 | Name | Default | Description |
