@@ -36,7 +36,7 @@ We also support changing opts on execution time like `:let g:garbage_day_config[
 | `aggressive_mode` | `false` | Set it to `true` to stop all lsp clients except the current buffer, every time you enter a buffer. `aggressive_mode` ignores `grace_period`, and it only triggers when entering a buffer with a differen filetype than the current buffer. Ensures the maximum RAM save. |
 | `excluded_lsp_clients` | `{"jdtls"}` | LSP clients that should never be stopped. Useful for LSP clients that miss behave. |
 | `grace_period` | `60*15` | Seconds to wait before stopping all LSP clients after neovim loses focus. |
-| `wakeup_delay` | `0` | Milliseconds to wait before restoring LSP after the mouse re-enters nvim. If the mouse leaves neovim before `wakeup_delay` completes, then waking up is canceled. Useful to avoid waking up nvim by accident. |
+| `wakeup_delay` | `0` | Milliseconds to wait before restoring LSP after the mouse re-enters nvim. Useful to avoid waking up nvim by accident when passing the mouse over it. |
 
 ## Debug options
 You can tweak them in case some particular LSP client don't start/stop correctly on your machine.
