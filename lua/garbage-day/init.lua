@@ -9,8 +9,10 @@
 -- FocusGained: When the mouse enters neovim, start all LSP
 --              for the current buffer.
 --
--- BufEnter:    This is a extra, non core feature.
---              Stop all LSP clients except the current buffer.
+-- BufEnter:    Manager the feature aggressive_mode.
+--              When the mouse enters a buffer, stop all LSP clients
+--              If the new buffer filetype is different from the previous one.
+--              Always try to start LSP. Even if aggressive_mode is disabled.
 -- ----------------------------------------------------------------------------
 
 
@@ -34,7 +36,7 @@ function M.setup(opts)
   vim.g.garbage_day_config = config
 
   -- Focus lost?
-  vim.api.nvim_create_autocmd({ "FocusLost" }, {
+  vim.api.nvim_create_autocmd("FocusLost", {
     callback = function()
       -- Start counting
       timer:start(1000, 1000, vim.schedule_wrap(function()
@@ -55,12 +57,11 @@ function M.setup(opts)
   })
 
   -- Focus gained?
-  vim.api.nvim_create_autocmd({ "FocusGained" }, {
+  vim.api.nvim_create_autocmd("FocusGained", {
     callback = function()
       -- Start LSP
       if lsp_has_been_stopped then
-        vim.defer_fn(function() vim.cmd(":LspStart") end, 120)
-        vim.defer_fn(function() pcall(function() require("null-ls").enable({}) end) end, 200)
+        utils.start_lsp()
         if config.notifications then utils.notify("lsp_has_started") end
       end
 
@@ -74,17 +75,25 @@ function M.setup(opts)
   })
 
   -- Buffer entered?
-  vim.api.nvim_create_autocmd({ "BufEnter"}, {
+  local current_filetype = ""
+  vim.api.nvim_create_autocmd("BufEnter", {
     callback = function()
-      if config.aggressive_mode then
-        vim.defer_fn(function()
-          utils.stop_lsp()
-          utils.start_lsp()
-          if config.notifications then utils.notify("lsp_has_stopped") end
-        end, 100)
-      end
-    end
+      local new_filetype = vim.bo.filetype
+
+      vim.defer_fn(function()
+        current_filetype = new_filetype
+        utils.start_lsp() -- always start
+        if new_filetype ~= current_filetype then
+          -- Run aggressive_mode
+          if config.aggressive_mode then
+            utils.stop_lsp()
+            if config.notifications then utils.notify "lsp_has_stopped" end
+          end
+        end
+      end, 100)
+    end,
   })
+
 end
 
 return M
