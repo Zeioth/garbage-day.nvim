@@ -36,7 +36,6 @@ We also support changing opts on execution time like `:let g:garbage_day_config[
 | `aggressive_mode` | `false` | Set it to `true` to stop all lsp clients except the current buffer, every time you enter a buffer. `aggressive_mode` operates independently of `grace_period`. It only triggers when entering a buffer with a differen filetype from the current buffer. Ensures the maximum RAM save. |
 | `excluded_lsp_clients` | `{"jdtls"}` | LSP clients that should never be stopped. Useful for LSP clients that miss behave. |
 | `grace_period` | `60*15` | Seconds to wait before stopping all LSP clients after neovim loses focus. |
-| `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. |
 
 
 ## Advanced options
@@ -44,6 +43,7 @@ You don't need to touch this, but you can
 
 | Name | Default | Description |
 |--|--|--|
+| `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. |
 | `retries` | `3` | Times to try to start a LSP client before giving up. |
 | `timeout` | `100` | Milliseconds that will take for `retries` to complete. Example: by default we try 3 retries for 100ms. |
 
