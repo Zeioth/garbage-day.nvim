@@ -43,7 +43,7 @@ You don't need to touch this, but you can
 
 | Name | Default | Description |
 |--|--|--|
-| `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. |
+| `notifications` | `false` | Set it to `true` to get a notification every time LSP garbage collection triggers. |
 | `retries` | `3` | Times to try to start a LSP client before giving up. |
 | `timeout` | `100` | Milliseconds that will take for `retries` to complete. Example: by default we try 3 retries for 100ms. |
 
