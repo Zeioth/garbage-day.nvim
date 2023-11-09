@@ -39,7 +39,7 @@ We also support changing opts on execution time like `:let g:garbage_day_config[
 
 
 ## Advanced options
-You don't need to touch these options. But you can tweak them in case some particular LSP client don't start/stop correctly on your machine.
+You can tweak them in case some particular LSP client don't start/stop correctly on your machine.
 
 | Name | Default | Description |
 |--|--|--|
