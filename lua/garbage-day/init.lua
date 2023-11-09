@@ -28,6 +28,7 @@ local elapsed_time = 0
 
 local grace_period_exceeded = false
 local lsp_has_been_stopped = false
+local wakeup_delay_counting = false
 
 
 --- Entry point of the program
@@ -38,6 +39,8 @@ function M.setup(opts)
   -- Focus lost?
   vim.api.nvim_create_autocmd("FocusLost", {
     callback = function()
+      wakeup_delay_counting = false -- reset wakeup_delay state
+
       -- Start counting
       timer:start(1000, 1000, vim.schedule_wrap(function()
         -- Update timer state
@@ -59,18 +62,24 @@ function M.setup(opts)
   -- Focus gained?
   vim.api.nvim_create_autocmd("FocusGained", {
     callback = function()
-      -- Start LSP
-      if lsp_has_been_stopped then
-        utils.start_lsp()
-        if config.notifications then utils.notify("lsp_has_started") end
-      end
+      wakeup_delay_counting = true
+      vim.defer_fn(function()
+        -- if the mouse leave nvim before wakeup_delay ends, don't awake.
+        if wakeup_delay_counting then
+          -- Start LSP
+          if lsp_has_been_stopped then
+            utils.start_lsp()
+            if config.notifications then utils.notify("lsp_has_started") end
+          end
 
-      -- Reset state
-      start_time = os.time()
-      current_time = 0
-      elapsed_time = 0
-      grace_period_exceeded = false
-      lsp_has_been_stopped = false
+          -- Reset state
+          start_time = os.time()
+          current_time = 0
+          elapsed_time = 0
+          grace_period_exceeded = false
+          lsp_has_been_stopped = false
+        end
+      end, config.wakeup_delay)
     end
   })
 
