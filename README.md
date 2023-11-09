@@ -33,7 +33,7 @@ We also support changing opts on execution time like `:let g:garbage_day_config[
 
 | Name | Default | Description |
 |--|--|--|
-| `aggressive_mode` | `false` | Set it to `true` to stop all lsp clients except the current buffer. `aggressive_mode` operates independently of `grace_period` |
+| `aggressive_mode` | `false` | Set it to `true` to stop all lsp clients except the current buffer, every time you enter a buffer. `aggressive_mode` operates independently of `grace_period`. It only triggers when entering a buffer with a differen filetype from the current buffer. Ensures the maximum RAM save. |
 | `excluded_lsp_clients` | `{"jdtls"}` | LSP clients that should never be stopped. Useful for LSP clients that miss behave. |
 | `grace_period` | `60*15` | Seconds to wait before stopping all LSP clients after neovim loses focus. |
 | `notifications` | `false` | Set it to `true` to get a notification every time LSP clients are stopped. |
@@ -44,16 +44,15 @@ You don't need to touch this, but you can
 
 | Name | Default | Description |
 |--|--|--|
-| `aggressive_mode` | `false` | Set it to `true` to stop all lsp clients except the current buffer, every time you enter a buffer. `aggressive_mode` operates independently of `grace_period`. It only triggers when entering a buffer with a differen filetype from the current buffer. Ensures the maximum RAM save. |
 | `retries` | `3` | Times to try to start a LSP client before giving up. |
 | `timeout` | `100` | Milliseconds that will take for `retries` to complete. Example: by default we try 3 retries for 100ms. |
 
-To avoid issues make sure the value of `grace_period` is higher than `retries`. Otherwise you will be trying to start and stop LSP at the same time.
+IMPORTANT: If you change the default values, make sure the value of `grace_period` is always bigger than `timeout`/1000. This ensures you are leaving enough time between `stop_lsp()`/`start_lsp()`, so they don't overlap.
 
 ## FAQ
 
 * `If it doesn't work`: This plugin has been tested with neovim 0.9 and 0.10. If you are in a neovim version superior to nvim 0.10, and it doesn't work, please [open a issue tagging me](https://github.com/Zeioth/garbage-day.nvim/issues) and I will fix it.
-* `Can I manually trigger garbage collection?` Yes, you can create a keymapping like
+* `Can I manually trigger garbage collection?` Yes, you can do it like
 ```lua
 require("garbage-day.utils").stop_lsp()  -- stop all lsp clients
 require("garbage-day.utils").start_lsp() -- start lsp clients for the current buffer
