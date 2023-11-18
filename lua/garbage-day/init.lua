@@ -9,7 +9,7 @@
 -- FocusGained: When the mouse enters neovim, start all LSP
 --              for the current buffer.
 --
--- BufEnter:    Manager the feature aggressive_mode.
+-- BufEnter:    Manages the feature aggressive_mode.
 --              When the mouse enters a buffer, stop all LSP clients
 --              If the new buffer filetype is different from the previous one.
 --              Always try to start LSP. Even if aggressive_mode is disabled.
