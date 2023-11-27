@@ -90,15 +90,15 @@ function M.setup(opts)
       local new_filetype = vim.bo.filetype
 
       vim.defer_fn(function()
-        current_filetype = new_filetype
-        utils.start_lsp() -- always start
         if new_filetype ~= current_filetype then
           -- Run aggressive_mode
           if config.aggressive_mode then
             utils.stop_lsp()
+            utils.start_lsp()
             if config.notifications then utils.notify "lsp_has_stopped" end
           end
         end
+        current_filetype = new_filetype
       end, 100)
     end,
   })
