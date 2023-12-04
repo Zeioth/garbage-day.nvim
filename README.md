@@ -45,7 +45,7 @@ You can tweak them in case some particular LSP client don't start/stop correctly
 |--|--|--|
 | `notifications` | `false` | Set it to `true` to get a notification every time LSP garbage collection triggers. |
 | `retries` | `3` | Times to try to start a LSP client before giving up. |
-| `timeout` | `1000` | Milliseconds that will take for `retries` to complete. Example: by default we try 3 retries for 100ms. |
+| `timeout` | `1000` | Milliseconds that will take for `retries` to complete. Example: by default we try 3 retries for 1000ms. |
 
 IMPORTANT: If you change the default values, make sure the value of `grace_period` is always bigger than `timeout`/1000. This ensures you are leaving enough time between `stop_lsp()`/`start_lsp()`, so they don't overlap.
 
