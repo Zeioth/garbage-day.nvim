@@ -9,6 +9,7 @@ function M.set(opts)
   M.retries = opts.retries or 3 -- times
   M.timeout = opts.timeout or 1000 -- ms
   M.wakeup_delay = opts.wakeup_delay or 0 -- ms
+  M.ignore_ft = opts.ignore_ft or { "NvimTree" } -- { "NvimTree" }
 end
 
 return M

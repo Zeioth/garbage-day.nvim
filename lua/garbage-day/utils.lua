@@ -21,6 +21,16 @@ function M.stop_lsp()
   end
 end
 
+-- Checks if element inside an array (table)
+function M.in_table(tbl, item)
+    for _, value in pairs(tbl) do
+        if value == item then
+            return true
+        end
+    end
+    return false
+end
+
 ---Start LSP clients for the current buffer.
 ---It will retry for a configurable amount of times.
 function M.start_lsp()

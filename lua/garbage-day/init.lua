@@ -90,6 +90,10 @@ function M.setup(opts)
       local new_filetype = vim.bo.filetype
 
       vim.defer_fn(function()
+        -- ignore for given file types
+        if utils.in_table(config.ignore_ft, new_filetype) then
+          return
+        end
         if new_filetype ~= current_filetype then
           -- Run aggressive_mode
           if config.aggressive_mode then
