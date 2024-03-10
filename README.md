@@ -26,7 +26,7 @@ Add this to lazy
 },
 ```
 
-We also support changing opts on execution time like `:let g:garbage_day_config['option']='value'`
+We also support changing opts on execution time like `:let g:garbage_day_config['option']='value'
 `
 
 ## Available options
