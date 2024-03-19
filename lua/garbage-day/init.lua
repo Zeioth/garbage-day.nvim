@@ -84,14 +84,17 @@ function M.setup(opts)
   })
 
   -- Buffer entered?
-  local current_filetype = ""
+  local current_filetype = vim.bo.filetype
   vim.api.nvim_create_autocmd("BufEnter", {
     callback = function()
       local new_filetype = vim.bo.filetype
       local new_buftype = vim.bo.buftype
 
+      -- Guard clauses
+      if vim.tbl_contains(config.aggresive_mode_ignore.filetype, new_filetype) then return end
+      if vim.tbl_contains(config.aggresive_mode_ignore.buftype, new_buftype) then return end
+
       vim.defer_fn(function()
-        if new_buftype == "nofile" then return end
         if new_filetype ~= current_filetype then
           -- Run aggressive_mode
           if config.aggressive_mode then
