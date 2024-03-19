@@ -13,9 +13,6 @@ function M.set(opts)
   M.retries = opts.retries or 3 -- times
   M.timeout = opts.timeout or 1000 -- ms
   M.wakeup_delay = opts.wakeup_delay or 0 -- ms
-
-
-
 end
 
 return M
