@@ -91,7 +91,7 @@ function M.setup(opts)
       local new_buftype = vim.bo.buftype
 
       vim.defer_fn(function()
-        if new_buftype == "nofile" or new_buftype == "" then return end
+        if new_buftype == "nofile" then return end
         if new_filetype ~= current_filetype then
           -- Run aggressive_mode
           if config.aggressive_mode then
