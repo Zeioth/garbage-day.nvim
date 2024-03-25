@@ -19,7 +19,6 @@
 local M = {}
 local uv = vim.uv or vim.loop
 local utils = require("garbage-day.utils")
-local config = require("garbage-day.config")
 
 local timer = uv.new_timer() -- Can store ~29377 years
 local start_time = os.time()
@@ -33,12 +32,12 @@ local wakeup_delay_counting = false
 
 --- Entry point of the program
 function M.setup(opts)
-  config.set(opts)
-  vim.g.garbage_day_config = config
+  require("garbage-day.config").set(opts)
 
   -- Focus lost?
   vim.api.nvim_create_autocmd("FocusLost", {
     callback = function()
+      local config = vim.g.garbage_day_config
       wakeup_delay_counting = false -- reset wakeup_delay state
 
       -- Start counting
@@ -62,7 +61,9 @@ function M.setup(opts)
   -- Focus gained?
   vim.api.nvim_create_autocmd("FocusGained", {
     callback = function()
+      local config = vim.g.garbage_day_config
       wakeup_delay_counting = true
+
       vim.defer_fn(function()
         -- if the mouse leave nvim before wakeup_delay ends, don't awake.
         if wakeup_delay_counting then
@@ -87,6 +88,7 @@ function M.setup(opts)
   local current_filetype = vim.bo.filetype
   vim.api.nvim_create_autocmd("BufEnter", {
     callback = function()
+      local config = vim.g.garbage_day_config
       local new_filetype = vim.bo.filetype
       local new_buftype = vim.bo.buftype
 
