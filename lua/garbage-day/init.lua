@@ -54,7 +54,6 @@ function M.setup(opts)
           lsp_has_been_stopped = true
         end
       end))
-
     end
   })
 
@@ -109,7 +108,6 @@ function M.setup(opts)
       end, 100)
     end,
   })
-
 end
 
 return M

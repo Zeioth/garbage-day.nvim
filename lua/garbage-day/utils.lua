@@ -17,7 +17,6 @@ function M.stop_lsp()
       vim.lsp.stop_client(client.id)
       client.rpc.terminate()
     end
-
   end
 end
 
@@ -59,7 +58,6 @@ function M.start_lsp()
   -- Start the timer for the first trigger
   timer:start(duration, 0, timer_callback)
 end
-
 
 -- MISC UTILS
 -- ----------------------------------------------------------------------------
