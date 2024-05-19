@@ -8,7 +8,7 @@ local uv = vim.uv or vim.loop
 ---Stop all LSP clients, including the ones in other tabs.
 function M.stop_lsp()
   local config = vim.g.garbage_day_config
-  for _, client in pairs(vim.lsp.get_active_clients()) do
+  for _, client in pairs(vim.lsp.get_clients() or vim.lsp.get_active_clients()) do
     local is_lsp_client_excluded =
         vim.tbl_contains(config.excluded_lsp_clients, client.name)
 
