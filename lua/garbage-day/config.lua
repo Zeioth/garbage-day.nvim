@@ -1,7 +1,7 @@
 local M = {}
 
 ---Parse user options, or set the defaults.
----After running this function, opts will live in vim.g.garbage_day_config
+---After running this function, opts will live in `vim.g.garbage_day_config`.
 function M.set(opts)
   M.aggressive_mode = opts.aggressive_mode or false
   M.aggresive_mode_ignore = opts.aggresive_mode_ignore or {
