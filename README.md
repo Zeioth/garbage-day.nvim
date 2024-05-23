@@ -34,7 +34,7 @@ We also support changing opts on execution time like `:let g:garbage_day_config[
 | Name | Default | Description |
 |--|--|--|
 | `aggressive_mode` | `false` | Set it to `true` to stop all lsp clients except the current buffer, every time you enter a buffer. `aggressive_mode` ignores `grace_period`, and it only triggers when entering a buffer with a different filetype than the current buffer. Ensures the maximum RAM save. |
-| `excluded_lsp_clients` | `{"null-ls", "jdtls"}` | LSP clients that should never be stopped. Useful for LSP clients that miss behave. |
+| `excluded_lsp_clients` | [here](https://github.com/Zeioth/garbage-day.nvim/blob/main/lua/garbage-day/config.lua) | Table of LSP clients that should never be stopped. Useful for LSP clients that miss behave. |
 | `grace_period` | `60*15` | Seconds to wait before stopping all LSP clients after neovim loses focus. |
 | `wakeup_delay` | `0` | Milliseconds to wait before restoring LSP after the mouse re-enters nvim. Useful to avoid waking up the LSP clients by accident when passing the mouse over it. |
 
@@ -72,4 +72,4 @@ If you want to help me, please star this repository to increase the visibility o
 * [lsp-timeout](https://github.com/hinell/lsp-timeout.nvim): Recommended for nvim versions `<=0.8`
 
 ## Roadmap
-* Once nvim 0.10 is oficially released and we drop 0.9 support, we must replace the [deprecated function](https://neovim.io/doc/user/deprecated.html#vim.lsp.buf_get_clients()) `get_active_clients()` by `get_clients()`.
+* Once nvim 0.10 is oficially released ([on debian](https://tracker.debian.org/pkg/neovim)) and we drop 0.9 support, let's remove the [deprecated function](https://neovim.io/doc/user/deprecated.html#vim.lsp.buf_get_clients()) `get_active_clients()`.
