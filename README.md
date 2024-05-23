@@ -45,6 +45,7 @@ You can tweak them in case some particular LSP client don't start/stop correctly
 |--|--|--|
 | `aggressive_mode_ignore` | [here](https://github.com/Zeioth/garbage-day.nvim/blob/main/lua/garbage-day/config.lua) | Buffers to ignore on `aggressive_mode`. |
 | `notifications` | `false` | Set it to `true` to get a notification every time LSP garbage collection triggers. |
+| `notification_engine` | `default` | Can be set to [figet](https://github.com/j-hui/fidget.nvim) or [notify](https://github.com/rcarriga/nvim-notify) to send notifications with those plugins. |
 | `retries` | `3` | Times to try to start a LSP client before giving up. |
 | `timeout` | `1000` | Milliseconds that will take for `retries` to complete. Example: by default we try 3 retries for 1000ms. |
 

@@ -50,7 +50,7 @@ function M.setup(opts)
         if grace_period_exceeded and not lsp_has_been_stopped then
           timer:stop()
           utils.stop_lsp()
-          if config.notifications then utils.notify("lsp_has_stopped") end
+          if config.notifications then utils.notify("lsp_has_stopped", config.notification_engine) end
           lsp_has_been_stopped = true
         end
       end))
@@ -69,7 +69,7 @@ function M.setup(opts)
           -- Start LSP
           if lsp_has_been_stopped then
             utils.start_lsp()
-            if config.notifications then utils.notify("lsp_has_started") end
+            if config.notifications then utils.notify("lsp_has_started", config.notification_engine) end
           end
 
           -- Reset state
@@ -101,7 +101,7 @@ function M.setup(opts)
           if config.aggressive_mode then
             utils.stop_lsp()
             utils.start_lsp()
-            if config.notifications then utils.notify "lsp_has_stopped" end
+            if config.notifications then utils.notify("lsp_has_stopped", config.notification_engine) end
           end
         end
         current_filetype = new_filetype

@@ -65,17 +65,45 @@ end
 ---Sends a notification.
 ---@param kind string Accepted values are:
 ---{ "lsp_has_started", "lsp_has_stopped" }
-function M.notify(kind)
-  if kind == "lsp_has_started" then
-    vim.notify("Focus recovered. Starting LSP clients.",
-      vim.log.levels.INFO,
-      { title = "garbage-day.nvim" }
-    )
-  elseif kind == "lsp_has_stopped" then
-    vim.notify("Inactive LSP clients have been stopped to save resources.",
-      vim.log.levels.INFO,
-      { title = "garbage-day.nvim" }
-    )
+---@param engine string Accepted values are:
+---{ "default", "notify", "fidget" }
+function M.notify(kind, engine)
+  if engine == "notify" then
+      if kind == "lsp_has_started" then
+        require("notify")("Focus recovered. Starting LSP clients.",
+          vim.log.levels.INFO,
+          { title = "garbage-day.nvim" }
+        )
+      elseif kind == "lsp_has_stopped" then
+        require("notify")("Inactive LSP clients have been stopped to save resources.",
+          vim.log.levels.INFO,
+          { title = "garbage-day.nvim" }
+        )
+      end
+  elseif engine == "fidget" then
+      if kind == "lsp_has_started" then
+        require("fidget").notify("Focus recovered. Starting LSP clients.",
+          vim.log.levels.INFO,
+          { annotate = "garbage-day.nvim" }
+        )
+      elseif kind == "lsp_has_stopped" then
+        require("fidget").notify("Inactive LSP clients have been stopped to save resources.",
+          vim.log.levels.INFO,
+          { annotate = "garbage-day.nvim" }
+        )
+      end
+  else
+      if kind == "lsp_has_started" then
+        vim.notify("Focus recovered. Starting LSP clients.",
+          vim.log.levels.INFO,
+          { title = "garbage-day.nvim" }
+        )
+      elseif kind == "lsp_has_stopped" then
+        vim.notify("Inactive LSP clients have been stopped to save resources.",
+          vim.log.levels.INFO,
+          { title = "garbage-day.nvim" }
+        )
+      end
   end
 end
 

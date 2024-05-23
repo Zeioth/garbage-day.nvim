@@ -8,14 +8,15 @@ function M.set(opts)
     filetype = { "", "markdown", "text", "org", "tex", "asciidoc", "rst" },
     buftype = { "nofile" }
   }
-  M.excluded_lsp_clients = opts.excluded_lsp_clients or { 
-    "null-ls", "jdtls", "marksman" 
+  M.excluded_lsp_clients = opts.excluded_lsp_clients or {
+    "null-ls", "jdtls", "marksman"
   }
   M.grace_period = opts.grace_period or (60 * 15) -- seconds
   M.notifications = opts.notifications or false
   M.retries = opts.retries or 3                   -- times
   M.timeout = opts.timeout or 1000                -- ms
   M.wakeup_delay = opts.wakeup_delay or 0         -- ms
+  M.notification_engine = opts.notification_engine or "default"
 
   -- Expose globally
   vim.g.garbage_day_config = M
