@@ -17,10 +17,9 @@
 
 
 local M = {}
-local uv = vim.uv or vim.loop
 local utils = require("garbage-day.utils")
 
-local timer = uv.new_timer() -- Can store ~29377 years
+local timer = vim.uv.new_timer() -- Can store ~29377 years
 local start_time = os.time()
 local current_time = 0
 local elapsed_time = 0
