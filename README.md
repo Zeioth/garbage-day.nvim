@@ -53,7 +53,7 @@ IMPORTANT: If you change the default values, make sure the value of `grace_perio
 
 ## FAQ
 
-* `If it doesn't work` This plugin has been tested with neovim 0.9 and 0.10. If you are in a neovim version superior to nvim 0.10, and it doesn't work, please [open a issue tagging me](https://github.com/Zeioth/garbage-day.nvim/issues) and I will fix it.
+* `If it doesn't work` This plugin has been tested with neovim 0.10 and 0.11. If you are in a neovim version superior to nvim 0.11, and it doesn't work, please [open a issue tagging me](https://github.com/Zeioth/garbage-day.nvim/issues) and I will fix it.
 * `Can I manually trigger garbage collection?` Yes, you can do it like
 ```lua
 require("garbage-day.utils").stop_lsp()  -- stop all lsp clients.
