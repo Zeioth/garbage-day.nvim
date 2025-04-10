@@ -35,7 +35,12 @@ function M.start_lsp()
     end
 
     -- Start LSP
-    vim.cmd(":LspStart")
+    local ok, _ = pcall(require, "rustaceanvim")
+    if vim.bo.filetype == "rust" and ok then
+      vim.cmd(":RustAnalyzer start")
+    else
+      vim.cmd(":LspStart")
+    end
 
     -- Start null-ls
     local is_null_ls_excluded =
