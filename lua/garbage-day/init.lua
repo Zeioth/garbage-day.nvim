@@ -100,7 +100,7 @@ function M.setup(opts)
           if config.aggressive_mode then
             utils.stop_lsp()
             utils.start_lsp()
-            if config.notifications then utils.notify "lsp_has_stopped" end
+            if config.notifications then utils.notify("lsp_has_stopped") end
           end
         end
         current_filetype = new_filetype
