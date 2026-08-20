@@ -72,6 +72,7 @@ function M.setup(opts)
           end
 
           -- Reset state
+          timer:stop()
           start_time = os.time()
           current_time = 0
           elapsed_time = 0
