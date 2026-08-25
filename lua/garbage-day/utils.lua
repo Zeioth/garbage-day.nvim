@@ -7,6 +7,7 @@ local M = {}
 ---Stop all LSP clients, including the ones in other tabs.
 function M.stop_lsp()
   local config = vim.g.garbage_day_config
+  if not config then return end
   for _, client in pairs(vim.lsp.get_clients()) do
     local is_lsp_client_excluded =
         vim.tbl_contains(config.excluded_lsp_clients, client.name)
@@ -23,6 +24,7 @@ end
 ---It will retry for a configurable amount of times.
 function M.start_lsp()
   local config = vim.g.garbage_day_config
+  if not config then return end
   local total_retries = config.retries
   local duration = config.timeout
 
