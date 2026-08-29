@@ -1,6 +1,5 @@
 local M = {}
 
-
 -- CORE UTILS
 -- ----------------------------------------------------------------------------
 
@@ -9,11 +8,11 @@ function M.stop_lsp()
   local config = vim.g.garbage_day_config
   for _, client in pairs(vim.lsp.get_clients()) do
     local is_lsp_client_excluded =
-        vim.tbl_contains(config.excluded_lsp_clients, client.name)
+      vim.tbl_contains(config.excluded_lsp_clients, client.name)
 
     -- Stop lsp client
     if not is_lsp_client_excluded then
-      client.stop()
+      client:stop()
       client.rpc.terminate()
     end
   end
@@ -44,8 +43,8 @@ function M.start_lsp()
     end
 
     -- Start null-ls
-    local is_null_ls_excluded = vim.tbl_contains(
-      config.excluded_lsp_clients, "null-ls")
+    local is_null_ls_excluded =
+      vim.tbl_contains(config.excluded_lsp_clients, "null-ls")
     if not is_null_ls_excluded then
       pcall(function() require("null-ls").enable({}) end)
     end
@@ -68,12 +67,14 @@ end
 ---{ "lsp_has_started", "lsp_has_stopped" }
 function M.notify(kind)
   if kind == "lsp_has_started" then
-    vim.notify("Focus recovered. Starting LSP clients.",
+    vim.notify(
+      "Focus recovered. Starting LSP clients.",
       vim.log.levels.INFO,
       { title = "garbage-day.nvim" }
     )
   elseif kind == "lsp_has_stopped" then
-    vim.notify("Inactive LSP clients have been stopped to save resources.",
+    vim.notify(
+      "Inactive LSP clients have been stopped to save resources.",
       vim.log.levels.INFO,
       { title = "garbage-day.nvim" }
     )
